@@ -1,0 +1,111 @@
+
+       Virtual Fence System
+ 
+   Over 150 years ago barbed wire transformed livestock grazing and management
+  in the western U.S. Despite technological advances, barbed-wire fencing is
+  still the dominant means of managing livestock worldwide. Virtual fencing couples
+  location-based communication technology with wireless fencing, such as that used
+  in dog collars and invisible fencing, and has the potential to revolutionize
+  livestock management in Idaho and across the globe. However, current virtual
+  fencing attempts rely on bulky, power-hungry, GPS-based systems with limited
+  scalability for typical range livestock operations in Idaho and the West because
+  of expense and connectivity requirements.  We are developing a simplified,
+  low-cost approach to virtual fencing that leverages animal physiology and behavior,
+  proximity beacons, and lightweight electronic nose clips to manage cattle
+  distribution. Our objective is to advance early prototypes into a fully functional,
+  scalable virtual fencing system and deploy it in a field trial. Our simple yet
+  robust virtual fencing technology could, like barbed wire over a century ago,
+  a catalyst that transforms livestock operations and improves economic and
+  environmental sustainability for an important agricultural sector in Idaho.
+  
+       Virtual Fence System
+ 
+  The Virtual Fence system consists of two devices that are used to contain
+  Cows in a defined area.  The first device, a beacon, is used to define a
+  fenced area, the second device, a BuzzZap, is used to control the Cow.
+  
+  Beacons/fence posts
+    - placed at intervals (min/max distance) to define a "fenced" area
+    - detect when a Cow is nearing the "fence line"
+      - 
+    - Buzz the Cow as it gets near the line
+    - Zap the Cow if it continues to get closer
+    - store the data/information
+    - reply to status and data requests from Base Station
+    - communication protocol (to be designed/specified)
+      - one node is "FenceNet Manager"
+        - protocol specifies how to correct/respond if manager node fails
+        - manager discovers all nodes in fencenet
+          - detects failed nodes
+          - detects added nodes
+      - More protocol requirements . . . .
+
+  BuzzZap device
+    - circuitry that allows the Beacon to determine distance to the BuzzZap device
+      - transponder that repeats a pulse sent to it from a beacon
+        - many (>10) round-trip delay times can be averaged to determine distance
+    - listens for commands from Beacons
+      - Buzz Cow
+      - Zap Cow
+      - who are you? (respond with Cow ID and any other info)
+
+
+  Mechanical design
+    Both the Beacon and the BuzzZap device need enclosures designed that
+    can survive in a wide range of environmental conditions. The BuzzZap
+    device has size, weight, and material constraints.
+
+
+  Electrical/Electronic design
+    The BuzzZap device is a mixed signal circuit with this functionality :
+      - very low power RF transceiver
+      - receive a pulse and re-transmit at a different frequency (transponder)
+      - receive commands and execute or respond
+        - generate audio (Buzz)
+        - generate High voltage pulse (Zap)
+        - respond to data requests
+    The Beacon device is a mixed signal circuit with this functionality :
+      - low power RF transceiver
+        - generate pulse and measure time to received answer pulse
+        - communication with BuzzZap device
+        - communication with other Beacons and Base Station
+      - Logic/Firmware to :
+        - Communicate with BuzzZap device
+          - Determine presence of BuzzZap device(s)
+          - Determine location of BuzzZap device(s)
+          - Implement algorithm to decide when to :
+            - Buzz Cow
+            - Zap Cow
+          - Communicate with other Beacons & Base Station
+            - Determine location of other Beacons
+            - Coordinate control of Cows
+            - route commands to other Beacons
+            - respond to Base Station commands
+
+
+  The project will need :
+    - Mechanical Design                  : (1) ME
+    - PC board and FPGA design           : (2) EE/CompE
+    - Protocol Design and Implementation : (1) CompE/CS
+        
+
+--------------------------------------------------------------------------------
+
+Should Beacon have 2 antennas a large enough distance apart to
+allow an individual beacon to determine which side of the fence
+the Cow/BuzzZap is?
+  
+JWK: this would be ideal, but I think it's of secondary importance relative to some of the other functionality described above.
+
+
+  Target cost is < $5,000 for beacon system to cover at least 10,000 acres
+  and <$15 per BuzzZap device.
+    - 10,000 acres = 15.625 sq miles, call it 16 sq miles
+    - 4 mi x mi area has a perimiter of 16 miles
+    - at 1 beacon every 100 feet
+    - # beacons = (16 * 5280) / 100
+      = 845
+    - beacon cost = 5000 / 845
+	          ~ $6
+  
+  JWK: For the purposes of this prototype, I think we should cut this way back to something like 100 to 500 ac. That makes it much more doable to produce the number of beacons we'd need and contain costs for us. It's also large enough to be meaningful and should give us a good sense of how/if the system scales.
